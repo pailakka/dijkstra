@@ -16,7 +16,7 @@ func (g *Graph) finally(src, dest int) (BestPath, error) {
 	if !g.visitedDest {
 		return BestPath{}, ErrNoPath
 	}
-	return g.bestPath(src, dest), nil
+	return g.BestPath(src, dest), nil
 }
 
 func (g *Graph) setup(shortest bool, src int, list int) {
@@ -86,9 +86,12 @@ func (g *Graph) forceList(i int) {
 	}
 }
 
-func (g *Graph) bestPath(src, dest int) BestPath {
+func (g *Graph) BestPath(src, dest int) BestPath {
 	var path []int
 	for c := g.Verticies[dest]; c.ID != src; c = g.Verticies[c.bestVertex] {
+		if c.bestVertex == -1 {
+			return BestPath{}
+		}
 		path = append(path, c.ID)
 	}
 	path = append(path, src)
